@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -60,4 +63,20 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.truth)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx) // Soporte para Coroutines y Flow
+    ksp(libs.room.compiler)       // El procesador de anotaciones de Room
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    implementation(libs.gson)
+
+        androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.truth) // Podemos reusar truth
+    androidTestImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.androidx.arch.core.testing)
+    androidTestImplementation(libs.room.testing)
 }
