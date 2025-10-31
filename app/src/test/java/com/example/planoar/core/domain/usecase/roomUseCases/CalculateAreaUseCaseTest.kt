@@ -1,7 +1,8 @@
-package com.example.planoar.core.domain.usecase
+package com.example.planoar.core.domain.usecase.roomUseCases
 
 import com.example.planoar.core.domain.model.DomainPoint
-import com.google.common.truth.Truth.assertThat
+import com.example.planoar.core.domain.usecase.roomUseCases.CalculateAreaUseCase
+import com.google.common.truth.Truth
 import org.junit.Test
 
 class CalculateAreaUseCaseTest {
@@ -20,6 +21,6 @@ class CalculateAreaUseCaseTest {
 
         val calculatedArea = useCase(points)
 
-        assertThat(calculatedArea).isWithin(0.001).of(expectedArea)
+        Truth.assertThat(calculatedArea).isWithin(0.001).of(expectedArea)
     }
 }

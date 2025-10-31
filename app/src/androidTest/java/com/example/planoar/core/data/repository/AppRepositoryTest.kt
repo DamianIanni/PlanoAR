@@ -95,7 +95,7 @@ class AppRepositoryTest {
         println(">>> AppRepositoryTest: @After tearDown() - FIN")
     }
 
-    // --- SOLO CORREMOS ESTE TEST ---
+    // HOUSE TEST
     @Test
     fun insertHouse_getAllHouses_returnsSameHouse() = runTest {
         println(">>> AppRepositoryTest: Test insertHouse - INICIO")
@@ -111,8 +111,93 @@ class AppRepositoryTest {
         println(">>> AppRepositoryTest: Test insertHouse - FIN")
     }
 
-    // --- DESACTIVAMOS ESTE TEST TEMPORALMENTE ---
-//    @Ignore("Desactivado hasta resolver el problema del TypeConverter") // <-- Desactiva el test
+    @Test
+    fun deleteHouse_getAllHouses_removesHouse() = runTest {
+        println(">>> AppRepositoryTest: Test deleteHouse - INICIO")
+        // Asegurarnos que el repo se inicializó (si setup falla, esto fallará aquí)
+        if (!::repository.isInitialized) {
+            throw IllegalStateException("Repositorio no inicializado en el test de House")
+        }
+        val house1 = House(id = 1, name = "Casa de Prueba")
+        val house2 = House(id = 3, name = "Casa de")
+        repository.insertHouse(house1)
+        repository.insertHouse(house2)
+        val allHousesBeforeDelete = repository.getAllHouses().first()
+        assertThat(allHousesBeforeDelete).contains(house1)
+        repository.deleteHouse(house1)
+        val housesAfterDelete = repository.getAllHouses().first()
+        assertThat(house1).isNotIn(housesAfterDelete)
+        println(">>> AppRepositoryTest: Test insertHouse - FIN")
+    }
+
+    @Test
+    fun updateHouse_getAllHouses_returnsUpdatedHouse() = runTest {
+        println(">>> AppRepositoryTest: Test deleteHouse - INICIO")
+        // Asegurarnos que el repo se inicializó (si setup falla, esto fallará aquí)
+        if (!::repository.isInitialized) {
+            throw IllegalStateException("Repositorio no inicializado en el test de House")
+        }
+        val house1 = House(id = 1, name = "Casa de Prueba")
+        val house1Updated = House(id = 1, name = "Casa de Test")
+        repository.insertHouse(house1)
+        val houseBeforeUpdate = repository.getAllHouses().first()
+        assertThat(houseBeforeUpdate.first().name).isEqualTo("Casa de Prueba")
+        repository.updateHouse(house1Updated)
+        val housesAfterUpdate = repository.getAllHouses().first()
+        assertThat(housesAfterUpdate.first().name).isEqualTo("Casa de Test")
+        println(">>> AppRepositoryTest: Test insertHouse - FIN")
+    }
+
+    @Test
+    fun doesHouseExist_returnsTrue_whenHouseExists() = runTest {
+        println(">>> AppRepositoryTest: Test doesExist TRUE - INICIO")
+        if (!::repository.isInitialized) {
+            throw IllegalStateException("Repositorio no inicializado en el test de DoesExist True")
+        }
+
+        // --- Arrange ---
+        // 1. Insertamos la casa que vamos a buscar
+        val houseName = "Casa Existente"
+        val house = House(id = 0, name = houseName)
+        repository.insertHouse(house)
+
+        // --- Act ---
+        // 2. Llamamos a la función para verificar si existe
+        val exists = repository.doesHouseExist(houseName)
+
+        // --- Assert ---
+        // 3. Verificamos que devuelva TRUE
+        assertThat(exists).isTrue()
+
+        println(">>> AppRepositoryTest: Test doesExist TRUE - FIN")
+    }
+
+    @Test
+    fun doesHouseExist_returnsTrue_whenHouseDoesNotExists() = runTest {
+        println(">>> AppRepositoryTest: Test doesExist FALSE - INICIO")
+        if (!::repository.isInitialized) {
+            throw IllegalStateException("Repositorio no inicializado en el test de DoesExist False")
+        }
+
+        // --- Arrange ---
+        // 1. Nos aseguramos de que la base de datos esté vacía (el @Before y @After lo hacen)
+        //    Opcionalmente, puedes insertar una casa con OTRO nombre para estar seguro.
+        //    val otherHouse = House(id = 0, name = "Otra Casa")
+        //    repository.insertHouse(otherHouse)
+
+        val nameToSearch = "Casa Inexistente"
+
+        // --- Act ---
+        // 2. Llamamos a la función con un nombre que NO existe
+        val exists = repository.doesHouseExist(nameToSearch)
+
+        // --- Assert ---
+        // 3. Verificamos que devuelva FALSE
+        assertThat(exists).isFalse()
+
+        println(">>> AppRepositoryTest: Test doesExist FALSE - FIN")
+    }
+
     @Test
     fun insertRoom_getRoomsForHouse_returnsRoomWithCorrectPoints() = runTest {
         println(">>> AppRepositoryTest: Test insertRoom - INICIO")

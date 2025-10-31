@@ -42,6 +42,14 @@ class AppRepositoryImpl @Inject constructor(
         houseDao.deleteHouse(house.toDataEntity())
     }
 
+    override suspend fun updateHouse(house: House) {
+        houseDao.updateHouse(house.toDataEntity())
+    }
+
+    override suspend fun doesHouseExist(name: String): Boolean {
+      return houseDao.doesHouseExist(name)
+    }
+
     // --- Implementación de Room ---
 
     override fun getRoomsForHouse(houseId: Int): Flow<List<Room>> {
@@ -56,6 +64,17 @@ class AppRepositoryImpl @Inject constructor(
 
     override suspend fun deleteRoom(room: Room) {
         roomDao.deleteRoom(room.toDataEntity(gson))
+    }
+
+    override suspend fun updateRoom(room: Room) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun doesRoomExist(
+        name: String,
+        houseId: Int
+    ): Boolean {
+       return roomDao.doesRoomExist(name, houseId)
     }
 }
 

@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.planoar.core.data.local.entities.HouseEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -24,4 +25,10 @@ interface HouseDao {
     // Esto es la base de la UI reactiva.
     @Query("SELECT * FROM houses ORDER BY name ASC")
     fun getAllHouses(): Flow<List<HouseEntity>>
+
+    @Update
+    suspend fun updateHouse(house: HouseEntity)
+
+    @Query("SELECT EXISTS(SELECT 1 FROM houses WHERE LOWER(name) = LOWER(:name) LIMIT 1)")
+    suspend fun doesHouseExist(name: String): Boolean
 }

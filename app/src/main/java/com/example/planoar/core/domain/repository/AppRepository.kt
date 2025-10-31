@@ -14,9 +14,13 @@ interface AppRepository {
     fun getAllHouses(): Flow<List<House>>
     suspend fun insertHouse(house: House)
     suspend fun deleteHouse(house: House)
+    suspend fun updateHouse(house: House)
+    suspend fun doesHouseExist(name: String): Boolean
 
     // --- Funciones de Room ---
     fun getRoomsForHouse(houseId: Int): Flow<List<Room>>
     suspend fun insertRoom(room: Room)
     suspend fun deleteRoom(room: Room)
+    suspend fun updateRoom(room: Room)
+    suspend fun doesRoomExist(name: String, houseId: Int): Boolean
 }

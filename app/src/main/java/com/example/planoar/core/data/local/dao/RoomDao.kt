@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.planoar.core.data.local.entities.RoomEntity
+import com.example.planoar.core.domain.model.Room
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,4 +21,7 @@ interface RoomDao {
     // Obtenemos solo las habitaciones que pertenecen a una casa específica
     @Query("SELECT * FROM rooms WHERE houseId = :houseId ORDER BY name ASC")
     fun getRoomsForHouse(houseId: Int): Flow<List<RoomEntity>>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM rooms WHERE LOWER(name) = LOWER(:name) AND houseId = :houseId LIMIT 1)")
+    suspend fun doesRoomExist(name: String, houseId: Int): Boolean
 }

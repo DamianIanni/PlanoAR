@@ -1,4 +1,4 @@
-package com.example.planoar.core.domain.usecase
+package com.example.planoar.core.domain.usecase.roomUseCases
 
 import com.example.planoar.core.domain.model.DomainPoint
 import kotlin.math.abs
